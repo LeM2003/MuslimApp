@@ -2,7 +2,7 @@
 
 Application islamique complète — Coran, Invocations et Adhkar.
 
-🔗 **[➡️ Ouvrir l'application](https://lem2003.github.io/AlQuran-AlKarim/)**
+🔗 **[➡️ Ouvrir l'application](https://lem2003.github.io/MuslimApp/)**
 
 ---
 
