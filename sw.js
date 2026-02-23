@@ -4,7 +4,7 @@ var STATIC_ASSETS = [
   '/index.html',
   '/quran.html',
   '/duas.html',
-  '/adhkar.html',
+  '/Dhikrs.html',
   '/style.css',
   'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap'
 ];
