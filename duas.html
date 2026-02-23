@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Duas — الأدعية</title>
+<meta name="description" content="Invocations quotidiennes du Coran et de la Sunnah"/>
+<meta name="theme-color" content="#0a0d14"/>
+<link rel="manifest" href="manifest.json"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-glow"></div>
+<div class="bg-pattern">
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs><pattern id="geo" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <polygon points="20,2 38,11 38,29 20,38 2,29 2,11" fill="none" stroke="#c9a84c" stroke-width="0.5"/>
+      <polygon points="20,8 32,14 32,26 20,32 8,26 8,14" fill="none" stroke="#c9a84c" stroke-width="0.3"/>
+    </pattern></defs>
+    <rect width="200" height="200" fill="url(#geo)"/>
+  </svg>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Header -->
+<div class="section-header">
+  <a href="index.html" class="sec-back" id="back-btn">← Accueil</a>
+  <div class="sec-title-area">
+    <div class="sec-title" id="page-title">الأدعية</div>
+    <div class="sec-subtitle" id="page-subtitle">Invocations Quotidiennes</div>
+  </div>
+  <div class="sec-actions"></div>
+</div>
+
+<!-- Content -->
+<div id="content"></div>
+
+<!-- Footer (shown on categories view) -->
+<footer id="page-footer">
+  <div class="footer-dua">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً 🤲</div>
+  <div class="footer-credit">
+    Made with ❤️ by <a href="https://github.com/lem2003" target="_blank">Mouhamadou</a>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   DUAS DATA
+   ================================================================ */
+var CATEGORIES = [
+  {id:'morning', icon:'🌅', ar:'أدعية الصباح', fr:'Duas du Matin', count:0},
+  {id:'evening', icon:'🌙', ar:'أدعية المساء', fr:'Duas du Soir', count:0},
+  {id:'salah', icon:'🕌', ar:'أدعية الصلاة', fr:'Duas de la Prière', count:0},
+  {id:'food', icon:'🍽️', ar:'أدعية الطعام', fr:'Duas du Repas', count:0},
+  {id:'sleep', icon:'😴', ar:'أدعية النوم', fr:'Duas du Sommeil', count:0},
+  {id:'travel', icon:'✈️', ar:'أدعية السفر', fr:'Duas du Voyage', count:0},
+  {id:'protection', icon:'🛡️', ar:'أدعية الحماية', fr:'Duas de Protection', count:0},
+  {id:'forgiveness', icon:'💚', ar:'الاستغفار', fr:'Demande de Pardon', count:0},
+  {id:'parents', icon:'👨‍👩‍👧', ar:'أدعية للوالدين', fr:'Duas pour les Parents', count:0},
+  {id:'general', icon:'⭐', ar:'أدعية متنوعة', fr:'Duas Générales', count:0}
+];
+
+var DUAS = [
+  // MORNING
+  {cat:'morning', ar:'اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ', fr:'Ô Allah, c\'est par Toi que nous sommes arrivés au matin, et c\'est par Toi que nous arrivons au soir. C\'est par Toi que nous vivons et par Toi que nous mourrons, et c\'est vers Toi la résurrection.', src:'At-Tirmidhi'},
+  {cat:'morning', ar:'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ', fr:'Nous voilà au matin et le royaume appartient à Allah. Louange à Allah. Il n\'y a de divinité qu\'Allah seul, sans associé. À Lui la souveraineté, à Lui la louange et Il est capable de toute chose.', src:'Muslim'},
+  {cat:'morning', ar:'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ', fr:'Ô Allah, je Te demande le pardon et la santé dans ce monde et dans l\'au-delà.', src:'Ibn Majah'},
+  {cat:'morning', ar:'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ', fr:'Au nom d\'Allah, rien ne peut nuire avec Son nom, ni sur terre ni au ciel, et Il est l\'Audient, l\'Omniscient.', src:'Abu Dawud', rep:'3x'},
+  {cat:'morning', ar:'رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا', fr:'J\'accepte Allah comme Seigneur, l\'Islam comme religion et Muhammad ﷺ comme prophète.', src:'Abu Dawud', rep:'3x'},
+
+  // EVENING
+  {cat:'evening', ar:'اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ', fr:'Ô Allah, c\'est par Toi que nous arrivons au soir et par Toi au matin. C\'est par Toi que nous vivons et par Toi que nous mourons, et vers Toi est le retour.', src:'At-Tirmidhi'},
+  {cat:'evening', ar:'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ', fr:'Nous voilà au soir et le royaume appartient à Allah. Louange à Allah. Il n\'y a de divinité qu\'Allah seul, sans associé.', src:'Muslim'},
+  {cat:'evening', ar:'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ', fr:'Je cherche refuge auprès des paroles parfaites d\'Allah contre le mal de ce qu\'Il a créé.', src:'Muslim', rep:'3x'},
+
+  // SALAH
+  {cat:'salah', ar:'اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ', fr:'Ô Allah, Tu es la Paix et de Toi vient la paix. Béni sois-Tu, ô Détenteur de la majesté et de la générosité.', src:'Muslim — après le salam'},
+  {cat:'salah', ar:'سُبْحَانَ اللَّهِ (٣٣) الْحَمْدُ لِلَّهِ (٣٣) اللَّهُ أَكْبَرُ (٣٣)', fr:'Gloire à Allah (33x), Louange à Allah (33x), Allah est le Plus Grand (33x).', src:'Muslim — après chaque prière'},
+  {cat:'salah', ar:'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ', fr:'Notre Seigneur, accorde-nous une belle part dans ce monde, et une belle part dans l\'au-delà, et protège-nous du châtiment du Feu.', src:'Coran 2:201'},
+
+  // FOOD
+  {cat:'food', ar:'بِسْمِ اللَّهِ', fr:'Au nom d\'Allah.', src:'Avant de manger'},
+  {cat:'food', ar:'اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ', fr:'Ô Allah, bénis-nous dans ce que Tu nous as accordé et protège-nous du châtiment du Feu.', src:'Avant de manger'},
+  {cat:'food', ar:'الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ', fr:'Louange à Allah qui m\'a nourri de ceci et me l\'a accordé sans effort ni puissance de ma part.', src:'Abu Dawud — après manger'},
+
+  // SLEEP
+  {cat:'sleep', ar:'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا', fr:'En Ton nom, ô Allah, je meurs et je vis.', src:'Al-Bukhari — en se couchant'},
+  {cat:'sleep', ar:'اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ', fr:'Ô Allah, préserve-moi de Ton châtiment le jour où Tu ressusciteras Tes serviteurs.', src:'Abu Dawud'},
+  {cat:'sleep', ar:'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ', fr:'Louange à Allah qui nous a redonné la vie après nous avoir fait mourir, et c\'est vers Lui la résurrection.', src:'Al-Bukhari — au réveil'},
+
+  // TRAVEL
+  {cat:'travel', ar:'سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنقَلِبُونَ', fr:'Gloire à Celui qui a mis ceci à notre service, alors que nous n\'étions pas capables de le dominer. Et c\'est vers notre Seigneur que nous retournerons.', src:'Coran 43:13-14'},
+  {cat:'travel', ar:'اللَّهُمَّ إِنَّا نَسْأَلُكَ فِي سَفَرِنَا هَذَا الْبِرَّ وَالتَّقْوَى وَمِنَ الْعَمَلِ مَا تَرْضَى', fr:'Ô Allah, nous Te demandons dans ce voyage la bonté et la piété, et des actes qui Te plaisent.', src:'Muslim'},
+
+  // PROTECTION
+  {cat:'protection', ar:'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَالْعَجْزِ وَالْكَسَلِ وَالْبُخْلِ وَالْجُبْنِ وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ', fr:'Ô Allah, je cherche refuge auprès de Toi contre les soucis et la tristesse, contre l\'incapacité et la paresse, contre l\'avarice et la lâcheté, contre le poids des dettes et la domination des hommes.', src:'Al-Bukhari'},
+  {cat:'protection', ar:'حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ', fr:'Allah me suffit, il n\'y a de divinité que Lui. En Lui je place ma confiance et Il est le Seigneur du Trône immense.', src:'Coran 9:129', rep:'7x'},
+  {cat:'protection', ar:'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ وَمِنْ كُلِّ عَيْنٍ لَامَّةٍ', fr:'Je cherche refuge auprès des paroles parfaites d\'Allah contre tout démon, tout animal venimeux et tout mauvais œil.', src:'Al-Bukhari — Ruqya du Prophète ﷺ'},
+
+  // FORGIVENESS
+  {cat:'forgiveness', ar:'أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ', fr:'Je demande pardon à Allah le Très Grand, il n\'y a de divinité que Lui, le Vivant, le Subsistant, et je me repens à Lui.', src:'Abu Dawud'},
+  {cat:'forgiveness', ar:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ', fr:'Ô Allah, Tu es mon Seigneur, il n\'y a de divinité que Toi. Tu m\'as créé et je suis Ton serviteur. Je suis fidèle à Ton pacte et à Ta promesse autant que je le peux. Je cherche refuge auprès de Toi contre le mal que j\'ai commis. Je reconnais Tes bienfaits envers moi et je reconnais mes péchés. Pardonne-moi car nul ne pardonne les péchés si ce n\'est Toi.', src:'Al-Bukhari — Sayyid al-Istighfar'},
+  {cat:'forgiveness', ar:'رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنتَ التَّوَّابُ الرَّحِيمُ', fr:'Seigneur, pardonne-moi et accepte mon repentir. Tu es certes le Très Accueillant au repentir, le Miséricordieux.', src:'Abu Dawud & At-Tirmidhi'},
+
+  // PARENTS
+  {cat:'parents', ar:'رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا', fr:'Seigneur, fais-leur miséricorde comme ils m\'ont élevé quand j\'étais petit.', src:'Coran 17:24'},
+  {cat:'parents', ar:'رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ', fr:'Seigneur, pardonne-moi, ainsi qu\'à mes parents et aux croyants le jour où se dressera le compte.', src:'Coran 14:41'},
+  {cat:'parents', ar:'رَبِّ اغْفِرْ لِي وَلِوَالِدَيَّ وَلِمَن دَخَلَ بَيْتِيَ مُؤْمِنًا وَلِلْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ', fr:'Seigneur, pardonne-moi, à mes parents, à celui qui entre dans ma maison en croyant, et aux croyants et croyantes.', src:'Coran 71:28'},
+
+  // GENERAL
+  {cat:'general', ar:'رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً إِنَّكَ أَنتَ الْوَهَّابُ', fr:'Seigneur, ne fais pas dévier nos cœurs après nous avoir guidés. Accorde-nous de Ta part une miséricorde. C\'est Toi le Grand Donateur.', src:'Coran 3:8'},
+  {cat:'general', ar:'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالتُّقَى وَالْعَفَافَ وَالْغِنَى', fr:'Ô Allah, je Te demande la guidée, la piété, la chasteté et la suffisance.', src:'Muslim'},
+  {cat:'general', ar:'رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي', fr:'Seigneur, ouvre-moi ma poitrine et facilite-moi ma tâche.', src:'Coran 20:25-26'},
+  {cat:'general', ar:'لَا إِلَهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ', fr:'Il n\'y a de divinité que Toi. Gloire à Toi ! J\'étais certes parmi les injustes.', src:'Coran 21:87 — Dua de Yunus عليه السلام'},
+  {cat:'general', ar:'رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا', fr:'Seigneur, accorde-nous en nos épouses et nos descendants la joie des yeux, et fais de nous un guide pour les pieux.', src:'Coran 25:74'},
+];
+
+// Count duas per category
+CATEGORIES.forEach(function(cat) {
+  cat.count = DUAS.filter(function(d) { return d.cat === cat.id; }).length;
+});
+
+/* ================================================================
+   STATE
+   ================================================================ */
+var currentCat = null;
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+
+/* ================================================================
+   RENDER CATEGORIES
+   ================================================================ */
+function renderCategories() {
+  currentCat = null;
+  document.getElementById('page-title').textContent = 'الأدعية';
+  document.getElementById('page-subtitle').textContent = 'Invocations Quotidiennes';
+  document.getElementById('back-btn').href = 'index.html';
+  document.getElementById('back-btn').textContent = '← Accueil';
+  document.getElementById('back-btn').onclick = null;
+  document.getElementById('page-footer').style.display = '';
+
+  var content = document.getElementById('content');
+  content.innerHTML = '';
+
+  var wrap = document.createElement('div');
+  wrap.className = 'dua-categories';
+
+  CATEGORIES.forEach(function(cat) {
+    var el = document.createElement('div');
+    el.className = 'dua-cat';
+    el.innerHTML =
+      '<span class="dua-cat-icon">' + cat.icon + '</span>' +
+      '<div class="dua-cat-ar">' + cat.ar + '</div>' +
+      '<div class="dua-cat-name">' + cat.fr + '</div>' +
+      '<div class="dua-cat-count">' + cat.count + ' invocations</div>';
+    el.addEventListener('click', function() { openCategory(cat); });
+    wrap.appendChild(el);
+  });
+
+  content.appendChild(wrap);
+}
+
+/* ================================================================
+   OPEN CATEGORY
+   ================================================================ */
+function openCategory(cat) {
+  currentCat = cat.id;
+  document.getElementById('page-title').textContent = cat.ar;
+  document.getElementById('page-subtitle').textContent = cat.fr + ' — ' + cat.count + ' invocations';
+  document.getElementById('page-footer').style.display = 'none';
+
+  // Change back button to go to categories
+  var backBtn = document.getElementById('back-btn');
+  backBtn.href = '#';
+  backBtn.textContent = '← Catégories';
+  backBtn.onclick = function(e) {
+    e.preventDefault();
+    renderCategories();
+  };
+
+  var content = document.getElementById('content');
+  content.innerHTML = '';
+
+  var list = document.createElement('div');
+  list.className = 'content-list';
+
+  var items = DUAS.filter(function(d) { return d.cat === cat.id; });
+
+  items.forEach(function(dua, i) {
+    var card = document.createElement('div');
+    card.className = 'dua-card';
+
+    var html = '<div class="dua-card-num">' + (i + 1) + '</div>';
+    html += '<div class="dua-card-arabic">' + dua.ar + '</div>';
+    html += '<div class="dua-card-trans">' + dua.fr + '</div>';
+    html += '<div class="dua-card-source">📚 ' + dua.src + '</div>';
+    if (dua.rep) {
+      html += '<div class="dua-card-repeat">🔄 À répéter ' + dua.rep + '</div>';
+    }
+
+    card.innerHTML = html;
+    list.appendChild(card);
+  });
+
+  content.appendChild(list);
+  window.scrollTo(0, 0);
+}
+
+/* ================================================================
+   CHECK URL PARAMS
+   ================================================================ */
+function checkParams() {
+  var params = new URLSearchParams(window.location.search);
+  var cat = params.get('cat');
+  if (cat) {
+    var found = CATEGORIES.find(function(c) { return c.id === cat; });
+    if (found) {
+      openCategory(found);
+      return;
+    }
+  }
+  renderCategories();
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+checkParams();
+</script>
+</body>
+</html>
