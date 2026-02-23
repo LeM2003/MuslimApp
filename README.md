@@ -24,7 +24,7 @@ Application web complète pour lire et écouter le Saint Coran.
 
 ## 🔗 Lien
 
-👉 [Ouvrir l'application](https://TON-PSEUDO.github.io/TON-REPO/)
+👉 [Ouvrir l'application](https://lem2003.github.io/quran-ramadan-app/)
 
 ## 🤲 Dua
 
